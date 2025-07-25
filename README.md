@@ -11,7 +11,7 @@
 
 > ⚠️ **Note:**  
 > After completing the full implementation, we found that **logistic regression is not powerful enough** to reliably classify cat images.  
-> The **best training accuracy** achieved with this method was approximately **58%**, which is not sufficient for real-world image classification tasks.  
+> The **best training accuracy** achieved with this method was approximately **56%**, which is not sufficient for real-world image classification tasks.  
 > For higher performance, more advanced models (e.g., CNNs) would be required.
 
 ---
