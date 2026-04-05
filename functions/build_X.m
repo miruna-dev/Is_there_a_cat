@@ -9,7 +9,7 @@ m = length(files);
     m = length(files); 
     
     % Setăm rezoluția dorită: 224x224
-    target_size = [224, 224];
+    target_size = [128, 128];
     
     % Numărul de pixeli dintr-o imagine alb-negru (224 * 224 = 50176)
     n = target_size(1) * target_size(2);
