@@ -12,5 +12,5 @@ function [W1, b1, W2, b2] = train_model(X, y, n_h, alpha, lambda, num_iters)
     b2 = zeros(n_y, 1);
 
     % Pornim antrenamentul
-    [W1, b1, W2, b2] = gradient_descent(X, y, W1, b1, W2, b2, alpha, lambda, num_iters);
+    [W1, b1, W2, b2] = gradient_descendent(X, y, W1, b1, W2, b2, alpha, lambda, num_iters);
 end

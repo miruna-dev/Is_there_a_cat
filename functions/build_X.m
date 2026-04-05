@@ -1,6 +1,6 @@
 function X = build_X(folder_path)
     % Citim toate imaginile .jpg din folder
-    files = dir(fullfile(folder_path, '*.jpg')); 
+    files = [dir(fullfile(folder_path, '*.jpg')); dir(fullfile(folder_path, '*.JPG')); dir(fullfile(folder_path, '*.jpeg'))];
     m = length(files); 
     
     % Setăm rezoluția dorită: 224x224
