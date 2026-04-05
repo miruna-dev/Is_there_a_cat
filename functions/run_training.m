@@ -1,29 +1,41 @@
-function run_training(cat_folder, non_cat_folder, output_csv, alpha, num_iters)
+function run_training(cat_folder, non_cat_folder)
+    % --- PARAMETRI ---
+    alpha = 0.005;     % Learning rate (mai mic e mai sigur)
+    lambda = 0.1;      % Regularizare
+    num_iters = 1000;
+    n_h = 64;          % Număr de neuroni în stratul ascuns
+    
+    fprintf('Încarc și procesez imaginile (fără CSV!)...\n');
+    % Folosim build_X-ul cel nou care face și Data Augmentation
+    X_cats = build_X(cat_folder);
+    y_cats = ones(1, size(X_cats, 2));
+    
+    X_non_cats = build_X(non_cat_folder);
+    y_non_cats = zeros(1, size(X_non_cats, 2));
+    
+    % Combinăm datele
+    X = [X_cats, X_non_cats];
+    y = [y_cats, y_non_cats];
+    
+    % Amestecăm datele (Shuffle) - Vital pentru antrenament!
+    p = randperm(size(X, 2));
+    X = X(:, p);
+    y = y(:, p);
 
-  % run_training: Trains a model to distinguish between images of cats and non-cats
-  %   cat_folder: Path to the folder containing images of cats
-  %   non_cat_folder: Path to the folder containing images of non-cats
-  %   output_csv: Path to the output CSV file where image data and labels will be saved
-  %   alpha: Learning rate for the training algorithm
-  %   num_iters: Number of iterations for the training algorithm
+    fprintf('Încep antrenamentul pe un strat ascuns de %d neuroni...\n', n_h);
+    [W1, b1, W2, b2] = train_model(X, y, n_h, alpha, lambda, num_iters);
 
-  % Set the true labels for the images
-  % 1 for cat images, 0 for non-cat images
-  export_images_to_csv(cat_folder, output_csv, 1);
-  export_images_to_csv(non_cat_folder, output_csv, 0);
-
-  % get the characteristics of the images and labels
-  % from the CSV file
-  [X, y] = get_characteristics(output_csv);
-
-  % Compute w and b using the training algorithm
-  [w, b, J] = train_model(X, y, alpha, num_iters);
-
-  % y_pred = the result of prediction on the training set
-  y_pred = predict(X, w, b);
-  % Calculate the accuracy of the model
-  accuracy = mean(double(y_pred == y)) * 100;
-
-  fprintf('Final cost: %.4f\n', J);
-  fprintf('Training accuracy: %.2f%%\n', accuracy);
+    % Calculăm acuratețea pe setul de antrenament
+    Z1 = W1 * X + b1;
+    A1 = max(0, Z1);
+    Z2 = W2 * A1 + b2;
+    A2 = 1 ./ (1 + exp(-Z2));
+    predictions = A2 > 0.5;
+    
+    accuracy = mean(double(predictions == y)) * 100;
+    fprintf('Gata! Acuratețe antrenament: %.2f%%\n', accuracy);
+    
+    % Salvăm modelul eficient în format MATLAB binar
+    save('model_pisici.mat', 'W1', 'b1', 'W2', 'b2', 'n_h');
+    fprintf('Modelul a fost salvat în model_pisici.mat\n');
 end

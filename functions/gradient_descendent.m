@@ -1,27 +1,36 @@
-function [w, b] = gradient_descent(X, y, w, b, alpha, num_iters)
+function [W1, b1, W2, b2] = gradient_descent(X, y, W1, b1, W2, b2, alpha, lambda, num_iters)
+    m = size(X, 2); % numărul de exemple (coloane)
 
-  % Perform gradient descent to learn w and b
-  % X = input features
-  % y = true labels (0 or 1)
-  % w = weights (initial guess)
-  % b = bias (initial guess)
-  % alpha = learning rate
-  % num_iters = number of iterations for gradient descent
-  % m = number of training examples
-  m = length(y);
+    for i = 1:num_iters
+        % --- FORWARD PROPAGATION ---
+        Z1 = W1 * X + b1;
+        A1 = max(0, Z1); % ReLU Activation
+        
+        Z2 = W2 * A1 + b2;
+        A2 = 1 ./ (1 + exp(-Z2)); % Sigmoid Activation (Predicția finală)
 
-  for i = 1:num_iters
-  % Each step we update the weights and bias in the direction where the cost decreases
-    z = X * w + b;
-	% a = the probability to be a cat in the given image
-    a = sigmoid(z);
-	% Compute the error between predicted and true labels
-    dz = a - y;
-	% Compute gradients for weights and bias
-    dw = (1/m) * (X' * dz);
-    db = (1/m) * sum(dz);
-	% Update weights and bias to minimize the cost
-    w = w - alpha * dw;
-    b = b - alpha * db;
-  end
+        % --- BACKPROPAGATION ---
+        % Eroarea la nivelul stratului de ieșire
+        dZ2 = A2 - y;
+        dW2 = (1/m) * (dZ2 * A1') + (lambda/m) * W2;
+        db2 = (1/m) * sum(dZ2, 2);
+
+        % Eroarea la nivelul stratului ascuns
+        dA1 = W2' * dZ2;
+        dZ1 = dA1 .* (Z1 > 0); % Derivata ReLU
+        dW1 = (1/m) * (dZ1 * X') + (lambda/m) * W1;
+        db1 = (1/m) * sum(dZ1, 2);
+
+        % --- UPDATE PARAMETERS ---
+        W1 = W1 - alpha * dW1;
+        b1 = b1 - alpha * db1;
+        W2 = W2 - alpha * dW2;
+        b2 = b2 - alpha * db2;
+
+        % Afișăm costul la fiecare 100 de iterații
+        if mod(i, 100) == 0
+            cost = (-1/m) * sum(y .* log(A2 + 1e-15) + (1-y) .* log(1-A2 + 1e-15));
+            fprintf('Iterația %d, Cost: %.4f\n', i, cost);
+        end
+    end
 end
