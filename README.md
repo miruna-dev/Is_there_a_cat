@@ -9,7 +9,7 @@
 
 ## Project Overview
 
-> ⚠️ **Note:**  
+> **Note:**  
 > After completing the full implementation, we found that **logistic regression is not powerful enough** to reliably classify cat images.  
 > The **best training accuracy** achieved with this method was approximately **56%**, which is not sufficient for real-world image classification tasks.  
 > For higher performance, more advanced models (e.g., CNNs) would be required.
@@ -146,7 +146,7 @@ This function scans a folder of images and constructs the data matrix <code>X</c
 This function processes all images in a folder, converts them to vectors, assigns a label, and saves the data into a CSV file — ready for training or analysis.
 </p>
 
-> ⚠️ **Note from experience:**  
+> **Note from experience:**  
 > During experimentation, it became clear that working with **`.mat` files** is significantly more efficient than CSVs — especially when handling large image datasets.  
 > Saving and loading data in `.mat` format is **faster** and avoids issues with numerical precision and memory consumption that can occur when using CSV.  
 > Although this function uses CSV for simplicity and portability, switching to `.mat` is recommended for better performance in practical applications.
