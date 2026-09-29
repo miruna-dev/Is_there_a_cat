@@ -1,4 +1,4 @@
-<h1 align="center">Cat Detector - From Image to Prediction</h1>
+<h1 align="center">Cat Detector</h1>
 
 <p align="center">
   <i>An end-to-end MATLAB/Octave project for detecting cats in images using RGB processing and machine learning.</i>
